@@ -1,7 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Text, Boolean
 from sqlalchemy import create_engine
-from sqlalchemy.sql import func
 import dotenv
 import os
 
@@ -54,11 +53,8 @@ class Role(Base):
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
-    email = Column(String(255), unique=True)
-    login = Column(String(255), unique=True)
+    login = Column(String(255))
     password = Column(String(255))
-    first_name = Column(String(255))
-    last_name = Column(String(255))
 
 
 class UserRole(Base):
@@ -106,7 +102,6 @@ class Reservation(Base):
     transaction = Column(Integer, ForeignKey("transactions.id"))
     reservation_start = Column(DateTime)
     reservation_end = Column(DateTime)
-    reservation_time = Column(DateTime(timezone=True), default=func.now())
     canceled = Column(Boolean)
 
 
