@@ -5,7 +5,6 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from flask_login import LoginManager
 
 load_dotenv()
 from ..database import *
@@ -42,10 +41,6 @@ class Website(metaclass=SingletonMeta):
 
         # register all models here
         self.TestTable = createTestTable(self.db)
-        self.User = createUser(self.db)
-        self.login_manager = LoginManager()
-        self.login_manager.login_view = 'auth.login'
-        self.login_manager.init_app(self.app)
 
         with self.app.app_context():
             self.db.create_all()
