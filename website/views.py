@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, render_template, request, flash, jsonify
 import json
-from flask_login import current_user, login_required
 from . import Website
 
 views = Blueprint('views', __name__)
@@ -10,7 +9,6 @@ views = Blueprint('views', __name__)
 website = Website()
 
 @views.route('/', methods=['GET', 'POST'])
-@login_required
 def home():
     if request.method == 'POST':
         note = request.form.get('note')
