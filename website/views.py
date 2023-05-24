@@ -23,8 +23,7 @@ def home():
 
     table = website.TestTable.query.all()
 
-    return render_template("home.html", table=table)
-
+    return render_template("home.html", table=table, user=current_user)
 
 @views.route('/delete-entry', methods=['POST'])
 def delete_entry():
