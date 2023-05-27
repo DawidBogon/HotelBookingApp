@@ -1,18 +1,18 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from ..database.tables import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import Website
+from . import WebsiteUser
 from flask_login import login_user, login_required, logout_user, current_user, login_manager
 from .utils import validate_email
 
 auth = Blueprint('auth', __name__)
 
-website = Website()
+website = WebsiteUser()
 
 
 @website.login_manager.user_loader
 def load_user(user_id):
     return website.User.query.get(int(user_id))
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():

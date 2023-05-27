@@ -6,9 +6,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask_login import LoginManager
+from database import *
 
 load_dotenv()
-from ..database import *
 
 
 class SingletonMeta(type):
@@ -31,18 +31,17 @@ class SingletonMeta(type):
         return cls._instances[cls]
 
 
-class Website(metaclass=SingletonMeta):
+class WebsiteUser(metaclass=SingletonMeta):
     def __init__(self):
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
         self.app.config[
-            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME"]}'
+            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_USER"]}'
 
         self.db = SQLAlchemy(self.app)
 
         # register all models here
-        self.TestTable = createTestTable(self.db)
-        self.User = createUser(self.db)
+        self.TestTable, self.User = createUserTables(self.db)
         self.login_manager = LoginManager()
         self.login_manager.login_view = 'auth.login'
         self.login_manager.init_app(self.app)
@@ -50,3 +49,44 @@ class Website(metaclass=SingletonMeta):
         with self.app.app_context():
             self.db.create_all()
             print('Database schema has been synchronized')
+
+
+class WebsiteAccessPoint(metaclass=SingletonMeta):
+    def __init__(self):
+        self.app = Flask(__name__)
+        self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
+        self.app.config[
+            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_ACCESS_POINT"]}'
+
+        self.db = SQLAlchemy(self.app)
+
+        # register all models here
+        self.User, self.Role, self.Hotel, self.Room = createAccessPointTables(self.db)
+        self.login_manager = LoginManager()
+        self.login_manager.login_view = 'auth.login'
+        self.login_manager.init_app(self.app)
+
+        with self.app.app_context():
+            self.db.create_all()
+            print('Database schema has been synchronized')
+
+
+class WebsiteHotel(metaclass=SingletonMeta):
+    def __init__(self):
+        self.app = Flask(__name__)
+        self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
+        self.app.config[
+            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}'
+
+        self.db = SQLAlchemy(self.app)
+
+        # register all models here
+        self.Room, self.Transaction, self.RoomImage, self.Reservation = createHotelTables(self.db)
+        self.login_manager = LoginManager()
+        self.login_manager.login_view = 'auth.login'
+        self.login_manager.init_app(self.app)
+
+        with self.app.app_context():
+            self.db.create_all()
+            print('Database schema has been synchronized')
+
