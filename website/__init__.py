@@ -6,7 +6,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask_login import LoginManager
-from database import *
+from ..database import *
+from flask_session import Session
 
 load_dotenv()
 
@@ -37,14 +38,16 @@ class WebsiteUser(metaclass=SingletonMeta):
         self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
         self.app.config[
             'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_USER"]}'
-
+        self.app.config["SESSION_PERMANENT"] = False
+        self.app.config["SESSION_TYPE"] = "filesystem"
+        Session(self.app)
         self.db = SQLAlchemy(self.app)
 
         # register all models here
         self.TestTable, self.User = createUserTables(self.db)
-        self.login_manager = LoginManager()
-        self.login_manager.login_view = 'auth.login'
-        self.login_manager.init_app(self.app)
+        # self.login_manager = LoginManager()
+        # self.login_manager.login_view = 'auth.login'
+        # self.login_manager.init_app(self.app)
 
         with self.app.app_context():
             self.db.create_all()
@@ -63,7 +66,7 @@ class WebsiteAccessPoint(metaclass=SingletonMeta):
         # register all models here
         self.User, self.Role, self.Hotel, self.Room = createAccessPointTables(self.db)
         self.login_manager = LoginManager()
-        self.login_manager.login_view = 'auth.login'
+        self.login_manager.login_view = 'http://localhost:5000/login'
         self.login_manager.init_app(self.app)
 
         with self.app.app_context():

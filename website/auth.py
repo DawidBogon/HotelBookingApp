@@ -1,17 +1,25 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import WebsiteUser
 from flask_login import login_user, login_required, logout_user, current_user, login_manager
 from .utils import validate_email
+import requests
 
 auth = Blueprint('auth', __name__)
 
 website = WebsiteUser()
 
 
-@website.login_manager.user_loader
-def load_user(user_id):
-    return website.User.query.get(int(user_id))
+# @website.login_manager.user_loader
+# def load_user(user_id):
+#     payload = dict(id=user_id)
+#     res = requests.post('http://localhost:5001/load_user', json=payload)
+#     print(res.json()['user'])
+#     if res.status_code == 200:
+#         return res.json()['user']
+#     else:
+#         return None
+    # return website.User.query.get(int(user_id))
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -19,25 +27,42 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-
-        user = website.User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
+        payload = dict(email=email, password=password)
+        res = requests.post('http://localhost:5001/login', json=payload)
+        if res.status_code == 200:
+            res_json = res.json()
+            if res_json['result']:
                 flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
+                session['user_id'] = res_json['id']
+                session['logged_in'] = True
+                if session.get('prev_url'):
+                    prev_url = session.get('prev_url')
+                    session.pop('prev_url')
+                    return redirect(prev_url)
                 return redirect(url_for('views.home'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
             flash('Email does not exist.', category='error')
 
-    return render_template("login.html", user=current_user)
+    return render_template("login.html", user=session.get('logged_in'))
 
 
 @auth.route('/logout')
-@login_required
 def logout():
-    logout_user()
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.login'))
+    res = requests.post('http://localhost:5001/logout')
+    if res.status_code == 200:
+        res_json = res.json()
+        if res_json['result']:
+            flash('Logged out successfully', category='success')
+            session['user_id'] = None
+            session['logged_in'] = None
+        else:
+            flash('Failed to logout', category='error')
+    else:
+        flash('Failed to logout', category='error')
     return redirect(url_for('auth.login'))
 
 
@@ -66,11 +91,15 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            new_user = website.User(email=email, login=login, first_name=first_name, last_name=last_name,
-                            password=generate_password_hash(password1, method='sha256'))
-            website.db.session.add(new_user)
-            website.db.session.commit()
-            login_user(new_user, remember=True)
-            flash('Account created!', category='success')
-            return redirect(url_for('views.home'))
-    return render_template("sign_up.html", user=current_user)
+            payload = dict(email=email, login=login, first_name=first_name, last_name=last_name, password=password1)
+            res = requests.post('http://localhost:5001/sign_up', json=payload)
+            if res.status_code == 200:
+                res_json = res.json()
+                if res_json['result']:
+                    flash('Account created!', category='success')
+                    session['user_id'] = res_json['user_id']
+                    session['logged_in'] = True
+                    return redirect(url_for('views.home'))
+                else:
+                    flash('Failed to create user.', category='error')
+    return render_template("sign_up.html", user=session.get('logged_in'))

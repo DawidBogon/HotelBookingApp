@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, session, redirect, url_for
 import json
-from flask_login import current_user, login_required
 from . import WebsiteUser
 
 views = Blueprint('views', __name__)
@@ -11,8 +10,11 @@ website = WebsiteUser()
 
 
 @views.route('/', methods=['GET', 'POST'])
-@login_required
 def home():
+    if not session.get('logged_in'):
+        flash('You need to login first.', category='success')
+        session['prev_url'] = url_for('views.home')
+        return redirect(url_for('auth.login'))
     if request.method == 'POST':
         note = request.form.get('note')
 
@@ -26,7 +28,7 @@ def home():
 
     table = website.TestTable.query.all()
 
-    return render_template("home.html", table=table, user=current_user)
+    return render_template("home.html", table=table, user=session.get('logged_in'))
 
 
 @views.route('/delete-entry', methods=['POST'])
