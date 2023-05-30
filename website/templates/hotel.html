@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %} - FlaskApp</title>
+    <style>
+        .room {
+            flex: 20%;
+            padding: 10px;
+            margin: 5px;
+            background-color: #e0e0e0;
+            inline-size: 100%;
+        }
+
+        .add {
+            padding: 10px;
+            margin: 5px;
+            background-color: #f5f5f5;
+            color: #004835;
+        }
+    </style>
+</head>
+<body>
+    <hr>
+    <div class="room">
+        <h1>Room: {{ room.id }}</h1>
+        <p>Size: {{ room.size }}</p>
+        <p>Number of beds: {{ room.number_of_beds }}</p>
+        <div class="add"><p>Additionals: {{ room.additonals }}</p></div>
+        <p><b>Price: {{ room.price }}</b></p>
+{#    <button type="submit" class="btn btn-primary">Reserve room</button>#}
+    <button> <a class="nav-item nav-link" id="reservation" href="./reservation">Reserve room</a></button>
+    </div>
+</body>
+</html>
+
+
+
+
