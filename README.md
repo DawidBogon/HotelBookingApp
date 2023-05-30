@@ -8,3 +8,7 @@ Before first run, copy `.env.example` to `.env` and fine-tune the settings to ma
 - generate a unique secret key (e.g. from https://www.uuidgenerator.net/) and save it as `APP_SECRET`
 
 Then, run `make start`. Note: all commands starting with `make` must be run from the root catalogue of this project (the one in which `Makefile` resides in).
+
+
+## 2. Multiple flask instances on 1 PC
+Three classes with applications are created: websiteUser, websiteAccessPoint and websiteHotel. Appliactions are running on different ports
