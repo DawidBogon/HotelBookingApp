@@ -3,6 +3,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, session, redirect, url_for
 import json
 from . import WebsiteUser
+import requests
 
 views = Blueprint('views', __name__)
 
@@ -30,29 +31,31 @@ def home():
 
     return render_template("home.html", table=table, user=session.get('logged_in'))
 
-@views.route('/search', methods=['GET', 'POST'])
+
+@views.route('/search-room', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         city = request.form.get('city', None)
-        hotel_name = request.form.get('hotel_name', None)
+        hotel_name = request.form.get('price', None)
         min_rating = request.form.get('min_rating', None)
         max_rating = request.form.get('max_rating', None)
         no_of_beds = request.form.get('no_of_beds', None)
-        names = ['city', 'hotel_name', 'min_rating', 'max_rating', 'no_of_beds']
+        names = ['city', 'price', 'min_rating', 'max_rating', 'no_of_beds']
         values = [city, hotel_name, min_rating, max_rating, no_of_beds]
-        payload = {name: value for name, value in names, values if value is not None}
+        payload = {names[it]: value for it, value in enumerate(values) if value is not None}
         res = requests.post('http://localhost:5001/get-rooms', json=payload)
-        rooms = res.json()
         if res.status_code == 200:
-            if len(rooms) > 0:
+            rooms = res.json()
+            if len(rooms['res']) > 0:
                 flash('Found Rooms', category='info')
-                return render_template("rooms_list.html", user=session.get('logged_in'), rooms=rooms)
+                return render_template("rooms_list.html", user=session.get('logged_in'), rooms=rooms['res'])
             else:
                 flash('There are no rooms', category='error')
             return render_template("search.html", user=session.get('logged_in'))
         else:
             flash(f'Invalid response {res.status_code}', category='error')
     return render_template("search.html", user=session.get('logged_in'))
+
 
 @views.route('/delete-entry', methods=['POST'])
 def delete_entry():
