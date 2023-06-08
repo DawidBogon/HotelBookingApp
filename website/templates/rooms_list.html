@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<h1>Found Rooms</h1>
+<ul class="list-group list-group-flush" id="notes">
+  {% for room in room_list %}
+  <li class="list-group-item">
+    {{ room.price }} {{ room.city }} {{ room.rating}} {{ room.number_of_beds }}
+    <button type="button" class="close" onClick=makeReservatioon(hotel_url)> <!-- TODO: MAKE BUTTON TO REDIRECT--> >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+<script type="text/javascript">
+    document.getElementById("myButton").onclick = function (hotel_url) {
+        location.href = hotel_url;
+    };
+</script>

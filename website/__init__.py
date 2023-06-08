@@ -64,7 +64,7 @@ class WebsiteAccessPoint(metaclass=SingletonMeta):
         self.db = SQLAlchemy(self.app)
 
         # register all models here
-        self.User, self.Role, self.Hotel, self.Room = createAccessPointTables(self.db)
+        self.User, self.Role, self.Room = createAccessPointTables(self.db)
         self.login_manager = LoginManager()
         self.login_manager.login_view = 'http://localhost:5000/login'
         self.login_manager.init_app(self.app)
