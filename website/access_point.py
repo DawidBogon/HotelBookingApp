@@ -97,7 +97,10 @@ def return_rooms():
                                                # website.Room.additionals.in_(additionals),
                                                website.Room.number_of_beds >= number_of_beds,)).all()
                                                # website.Room.size >= size))
+        res_table = []
+        for room in rooms:
+            res_table.append(room.return_table())
 
-        response = make_response(jsonify(res=rooms))
+        response = make_response(jsonify(res=res_table))
         response.headers["Content-Type"] = "application/json"
         return response
