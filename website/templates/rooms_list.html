@@ -5,7 +5,7 @@
   {% for room in room_list %}
   <li class="list-group-item">
     {{ room.price }} {{ room.city }} {{ room.rating}} {{ room.number_of_beds }}
-    <button type="button" class="close" onClick=makeReservatioon(hotel_url)> <!-- TODO: MAKE BUTTON TO REDIRECT--> >
+    <button type="button" class="close" onClick=makeReservation(hotel_url)> <!-- TODO: MAKE BUTTON TO REDIRECT--> >
       <span aria-hidden="true">&times;</span>
     </button>
   </li>
