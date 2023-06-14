@@ -1,3 +1,7 @@
+from .website import WebsiteUser, WebsiteAccessPoint, WebsiteHotel
+from .website.views import views
+from .website.auth import auth
+from .website.hotel import hotel
 import os
 import threading
 import time
@@ -8,14 +12,11 @@ from sqlalchemy import table
 
 from .website import WebsiteUser, WebsiteAccessPoint, WebsiteHotel
 from .website.access_point import access_point
-from .website.auth import auth
-from .website.hotel import hotel
-from .website.views import views
 
 if __name__ == '__main__':
     website = WebsiteUser()
     website_access_point = WebsiteAccessPoint()
-    website_hotel = WebsiteHotel()
+    website_hotel = WebsiteHotel(db_name=os.environ["DB_NAME_HOTEL"])
 
     website.app.register_blueprint(views, url_prefix='/')
     website.app.register_blueprint(auth, url_prefix='/')
