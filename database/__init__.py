@@ -61,7 +61,18 @@ def createAccessPointTables(db):
                         mimetypes=self.mimetype, number_of_beds=self.number_of_beds, additionals=self.additionals,
                         price=self.price, rating=self.rating, api_endpoint=self.api_endpoint, city=self.city, address=self.address)
 
-    return User, Role, Room
+    class HotelData(db.Model):
+        __tablename__ = "hotel_datas"
+        id = db.Column(db.Integer, primary_key=True)
+        rating = db.Column(db.Float)
+        api_endpoint = db.Column(db.String(255))
+        city = db.Column(db.String(255))
+        address = db.Column(db.String(255))
+
+        def return_table(self):
+            return dict(id=self.id, rating=self.rating, api_endpoint=self.api_endpoint, city=self.city, address=self.address)
+
+    return User, Role, Room, HotelData
 
 
 def createHotelTables(db):
