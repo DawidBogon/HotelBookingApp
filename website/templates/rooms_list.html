@@ -1,5 +1,82 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
+
+<style>
+.table { display: table; }
+.row { display: table-row; }
+.cell { display: table-cell;
+        border: 1px solid #999999;
+    }
+.cell2{
+    display: table-cell;
+    padding-left: 5px;
+
+}
+.inside{
+    text-align: center;
+    horiz-align: center;
+
+}
+
+</style>
+<h1>Found Rooms</h1>
+<ul class="list-group list-group-flush" id="notes">
+<div class="table">
+    <div class="row">
+          <div class="cell">
+              <div class="inside">
+                <h3>Cena</h3>
+              </div>
+          </div>
+
+          <div class="cell">
+              <div class="inside">
+                <h3>Miasto</h3>
+              </div>
+          </div>
+
+          <div class="cell">
+              <div class="inside">
+                <h3>Ocena</h3>
+              </div>
+          </div>
+
+          <div class="cell">
+              <div class="inside">
+                <h3>Liczba łóżek</h3>
+              </div>
+          </div>
+
+    </div>
+        {% for room in rooms %}
+        <div class="row">
+            <div class="cell">
+                <div class="inside">
+                    {{ room.price }}
+                </div>
+            </div>
+            <div class="cell">
+                <div class="inside">
+                {{ room.city }}
+                </div>
+            </div>
+            <div class="cell">
+                <div class="inside">
+                {{ room.rating}}
+                </div>
+            </div>
+            <div class="cell">
+                <div class="inside">
+                {{ room.number_of_beds }}
+                </div>
+            </div>
+            <div class="cell2">
+                <input class="button" type="button" onclick="location.href='{{ room.api_endpoint }}';" value="Go to hotel" />
+            </div>
+        </div>
+        {% endfor %}
+  </div>
+
 <h1>Found Rooms</h1>
 <ul class="list-group list-group-flush" id="notes">
   {% for room in rooms %}
@@ -10,5 +87,6 @@
     </button>
   </li>
   {% endfor %}
+
 </ul>
 {% endblock %}
