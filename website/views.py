@@ -33,7 +33,7 @@ def home():
 
 
 @views.route('/search-room', methods=['GET', 'POST'])
-def login():
+def search_room():
     if request.method == 'POST':
         city = request.form.get('city', None)
         hotel_name = request.form.get('price', None)

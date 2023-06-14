@@ -89,7 +89,7 @@ def return_rooms():
         number_of_beds = input_json['no_of_beds']
         # additionals = input_json['additionals']
         price = input_json['price']
-        rating = input_json['min_rating']
+        rating = input_json['max_rating']
         city = input_json['city']
         rooms = website.Room.query.filter(and_(website.Room.city == city,
                                                website.Room.rating >= rating,
