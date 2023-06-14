@@ -70,8 +70,12 @@ def createHotelTables(db):
         id = db.Column(db.Integer, primary_key=True)
         size = db.Column(db.Integer)
         number_of_beds = db.Column(db.Integer)
-        additonals = db.Column(db.String(255))
+        additionals = db.Column(db.String(255))
         price = db.Column(db.Float)
+
+        def return_table(self):
+            return dict(id=self.id, size=self.size, number_of_beds=self.number_of_beds, additionals=self.additionals,
+                        price=self.price)
 
     class Transaction(db.Model):
         __tablename__ = "transactions"

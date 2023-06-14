@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from flask_login import LoginManager
 from ..database import *
 from flask_session import Session
+import pandas as pd
 
 load_dotenv()
 
@@ -75,11 +76,11 @@ class WebsiteAccessPoint(metaclass=SingletonMeta):
 
 
 class WebsiteHotel(metaclass=SingletonMeta):
-    def __init__(self):
+    def __init__(self, db_name):
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
         self.app.config[
-            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}'
+            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{db_name}'
 
         self.db = SQLAlchemy(self.app)
 
@@ -90,6 +91,36 @@ class WebsiteHotel(metaclass=SingletonMeta):
         self.login_manager.init_app(self.app)
 
         with self.app.app_context():
+            #self.db.drop_all()
             self.db.create_all()
+            self.set_initial_values()
             print('Database schema has been synchronized')
 
+    def set_initial_values(self):
+        if os.environ["DB_NAME_HOTEL"] == 'hotel':
+            rooms = [(0, 20, 2, "czajnik,TV", 120),
+                     (1, 20, 2, "czajnik,TV", 120),
+                     (2, 20, 2, "czajnik,TV", 120),
+                     (3, 23, 2, "czajnik,TV", 125),
+                     (4, 23, 2, "czajnik,TV", 125),
+                     (5, 23, 2, "czajnik,TV", 125),
+                     (6, 23, 2, "czajnik,TV", 125),
+                     (7, 35, 3, "czajnik,TV", 180),
+                     (8, 35, 3, "czajnik,TV", 180),
+                     (9, 35, 3, "czajnik,TV", 180),
+                     (10, 40, 4, "czajnik,TV", 220),
+                     (11, 40, 4, "czajnik,TV", 220),
+                     (12, 40, 4, "czajnik,TV", 220),
+                     (13, 40, 4, "czajnik,TV", 220),
+                     (14, 120, 6, "czajnik,TV", 700),
+                     (15, 60, 4, "czajnik,TV", 300),
+                     (16, 25, 2, "czajnik,TV", 140),
+                     (17, 25, 2, "czajnik,TV", 140)]
+            try:
+                for id, size, number_of_beds, additionals, price in rooms:
+                    new_room = self.Room(id=id, size=size, number_of_beds=number_of_beds, additionals=additionals,
+                                         price=price)
+                    self.db.session.add(new_room)
+            except:
+                self.db.session.commit()
+                pass

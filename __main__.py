@@ -5,11 +5,13 @@ from .website.hotel import hotel
 import os
 import threading
 from .website.access_point import access_point
+import pandas as pd
+
 
 if __name__ == '__main__':
     website = WebsiteUser()
     website_access_point = WebsiteAccessPoint()
-    website_hotel = WebsiteHotel()
+    website_hotel = WebsiteHotel(db_name=os.environ["DB_NAME_HOTEL"])
 
     website.app.register_blueprint(views, url_prefix='/')
     website.app.register_blueprint(auth, url_prefix='/')
