@@ -1,6 +1,7 @@
 from .website import WebsiteUser, WebsiteAccessPoint, WebsiteHotel
 from .website.views import views
 from .website.auth import auth
+from .website.hotel import hotel
 import os
 import threading
 from .website.access_point import access_point
@@ -13,6 +14,7 @@ if __name__ == '__main__':
     website.app.register_blueprint(views, url_prefix='/')
     website.app.register_blueprint(auth, url_prefix='/')
     website_access_point.app.register_blueprint(access_point, url_prefix='/')
+    website_hotel.app.register_blueprint(hotel, url_prefix='/')
 
     def flask1():
         website.app.run(host="0.0.0.0", debug=(os.environ["APP_DEBUG"]).lower() == "true",
