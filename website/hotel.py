@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from . import WebsiteHotel
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session, make_response, jsonify
 from datetime import datetime
 import requests
 hotel = Blueprint('hotel', __name__)
 
-website = WebsiteHotel()
+website = WebsiteHotel('')
 
 
 @website.login_manager.user_loader
@@ -46,6 +46,18 @@ def reservation(room_id):
             flash('Incorrect date range', category='error')
     room = website.Room.query.get_or_404(room_id)
     return render_template('hotel.html', room=room)
+
+
+@hotel.route('/get_all_rooms', methods=['GET'])
+def get_all_rooms():
+    rooms = website.Room.query.all()
+    res_table = []
+    for room in rooms:
+        res_table.append(room.return_table())
+
+    response = make_response(jsonify(res=res_table))
+    response.headers["Content-Type"] = "application/json"
+    return response
 
 
 def create_transaction(room_id, reservation_start, reservation_end):
