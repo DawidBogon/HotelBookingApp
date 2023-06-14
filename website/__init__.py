@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 import os
 
+from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
 from flask_login import LoginManager
 from ..database import *
 from flask_session import Session
-import pandas as pd
 
 load_dotenv()
 
@@ -61,7 +60,7 @@ class WebsiteAccessPoint(metaclass=SingletonMeta):
         self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
         self.app.config[
             'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_ACCESS_POINT"]}'
-
+        self.db_url = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_ACCESS_POINT"]}'
         self.db = SQLAlchemy(self.app)
 
         # register all models here
@@ -80,8 +79,7 @@ class WebsiteHotel(metaclass=SingletonMeta):
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
         self.app.config[
-            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{db_name}'
-
+            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/hotel'
         self.db = SQLAlchemy(self.app)
 
         # register all models here
@@ -91,7 +89,7 @@ class WebsiteHotel(metaclass=SingletonMeta):
         self.login_manager.init_app(self.app)
 
         with self.app.app_context():
-            #self.db.drop_all()
+            self.db.drop_all()
             self.db.create_all()
             self.set_initial_values()
             print('Database schema has been synchronized')
@@ -124,3 +122,4 @@ class WebsiteHotel(metaclass=SingletonMeta):
             except:
                 self.db.session.commit()
                 pass
+            self.db.session.commit()
