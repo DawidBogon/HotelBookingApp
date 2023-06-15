@@ -60,7 +60,6 @@ class WebsiteAccessPoint(metaclass=SingletonMeta):
         self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
         self.app.config[
             'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_ACCESS_POINT"]}'
-        self.db_url = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_ACCESS_POINT"]}'
         self.db = SQLAlchemy(self.app)
 
         # register all models here
@@ -75,11 +74,11 @@ class WebsiteAccessPoint(metaclass=SingletonMeta):
 
 
 class WebsiteHotel(metaclass=SingletonMeta):
-    def __init__(self, db_name):
+    def __init__(self):
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
         self.app.config[
-            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/hotel'
+            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}'
         self.db = SQLAlchemy(self.app)
 
         # register all models here
@@ -119,7 +118,6 @@ class WebsiteHotel(metaclass=SingletonMeta):
                     new_room = self.Room(id=id, size=size, number_of_beds=number_of_beds, additionals=additionals,
                                          price=price)
                     self.db.session.add(new_room)
-            except:
                 self.db.session.commit()
+            except:
                 pass
-            self.db.session.commit()
