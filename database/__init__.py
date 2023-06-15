@@ -96,7 +96,9 @@ def createHotelTables(db):
     class Reservation(db.Model):
         __tablename__ = "reservations"
         id = db.Column(db.Integer, primary_key=True)
-        transaction = db.Column(db.Integer, db.ForeignKey("transactions.id"))
+        user = db.Column(db.Integer)
+        room = db.Column(db.Integer, db.ForeignKey("rooms.id"))
+        # transaction = db.Column(db.Integer, db.ForeignKey("transactions.id"))
         reservation_start = db.Column(db.DateTime)
         reservation_end = db.Column(db.DateTime)
         reservation_time = db.Column(db.DateTime(timezone=True), default=func.now())
