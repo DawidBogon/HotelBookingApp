@@ -6,7 +6,7 @@ from datetime import datetime
 import requests
 hotel = Blueprint('hotel', __name__)
 
-website = WebsiteHotel('')
+website = WebsiteHotel()
 
 
 @website.login_manager.user_loader
