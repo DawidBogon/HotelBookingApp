@@ -11,7 +11,7 @@ import pandas as pd
 if __name__ == '__main__':
     website = WebsiteUser()
     website_access_point = WebsiteAccessPoint()
-    website_hotel = WebsiteHotel(db_name=os.environ["DB_NAME_HOTEL"])
+    website_hotel = WebsiteHotel()
 
     website.app.register_blueprint(views, url_prefix='/')
     website.app.register_blueprint(auth, url_prefix='/')
@@ -29,6 +29,7 @@ if __name__ == '__main__':
     def flask3():
         website_hotel.app.run(host="0.0.0.0", debug=(os.environ["APP_DEBUG"]).lower() == "true",
                               port=int(os.environ["APP_PORT"])+2, use_reloader=False)
+
 
     t1 = threading.Thread(target=flask1, daemon=True)
 

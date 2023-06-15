@@ -42,7 +42,7 @@
         <h1 align="center">Room: {{ room.id }}</h1>
         <p align="center">Size: {{ room.size }}</p>
         <p align="center">Number of beds: {{ room.number_of_beds }}</p>
-        <p align="center">Additionals: {{ room.additonals }}</p>
+        <p align="center">Additionals: {{ room.additionals }}</p>
         <p align="center"><b>Price: {{ room.price }}</b></p>
     </div>
 
@@ -75,6 +75,54 @@
             <button type="submit" class="btn btn-primary" >Reserve room</button>
         </div>
     </form>
+    <br>
+    <hr>
+    <h1 align="center">Reserved dates</h1>
+
+<style>
+.table { display: table; }
+.row { display: table-row; }
+.cell { display: table-cell;
+        border: 1px solid #999999;
+    }
+
+.inside{
+    text-align: center;
+    horiz-align: center;
+
+}
+
+</style>
+<ul class="list-group list-group-flush" id="notes">
+<div class="table">
+    <div class="row">
+          <div class="cell">
+              <div class="inside">
+                <h3>Reservation start</h3>
+              </div>
+          </div>
+          <div class="cell">
+              <div class="inside">
+                <h3>Reservation end</h3>
+              </div>
+          </div>
+    </div>
+        {% for reservation in room_reservations %}
+        <div class="row">
+            <div class="cell">
+                <div class="inside">
+                    {{ reservation.reservation_start }}
+                </div>
+            </div>
+            <div class="cell">
+                <div class="inside">
+                {{ reservation.reservation_end }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+  </div>
+</ul>
 </body>
 </html>
 
