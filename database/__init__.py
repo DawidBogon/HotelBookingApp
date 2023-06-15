@@ -87,6 +87,7 @@ def createHotelTables(db):
             return dict(id=self.id, size=self.size, number_of_beds=self.number_of_beds, additionals=self.additionals,
                         price=self.price)
 
+    # Transaction not used
     class Transaction(db.Model):
         __tablename__ = "transactions"
         id = db.Column(db.Integer, primary_key=True)
@@ -96,6 +97,7 @@ def createHotelTables(db):
         completed = db.Column(db.Boolean)
         is_logged_in = db.Column(db.Boolean)
 
+    # RoomImage not used
     class RoomImage(db.Model):
         __tablename__ = "room_images"
         id = db.Column(db.Integer, primary_key=True)
@@ -106,10 +108,15 @@ def createHotelTables(db):
     class Reservation(db.Model):
         __tablename__ = "reservations"
         id = db.Column(db.Integer, primary_key=True)
-        transaction = db.Column(db.Integer, db.ForeignKey("transactions.id"))
+        user = db.Column(db.Integer)
+        room = db.Column(db.Integer, db.ForeignKey("rooms.id"))
+        # transaction = db.Column(db.Integer, db.ForeignKey("transactions.id"))
         reservation_start = db.Column(db.DateTime)
         reservation_end = db.Column(db.DateTime)
         reservation_time = db.Column(db.DateTime(timezone=True), default=func.now())
         canceled = db.Column(db.Boolean)
+
+        version = db.Column(db.Integer, nullable=False)
+        __mapper_args__ = {"version_id_col": version}
 
     return Room, Transaction, RoomImage, Reservation

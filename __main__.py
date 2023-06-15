@@ -14,6 +14,8 @@ if __name__ == '__main__':
     website_hotel = WebsiteHotel(db_name=db_name)
     website = WebsiteUser()
     website_access_point = WebsiteAccessPoint()
+    website_hotel = WebsiteHotel()
+
     website.app.register_blueprint(views, url_prefix='/')
     website.app.register_blueprint(auth, url_prefix='/')
     website_access_point.app.register_blueprint(access_point, url_prefix='/')
@@ -33,7 +35,7 @@ if __name__ == '__main__':
 
 
     schedule.every(10).minutes.do(access_point_update_service)
-
+  
     t1 = threading.Thread(target=flask1, daemon=True)
 
     t2 = threading.Thread(target=flask2, daemon=True)
