@@ -20,7 +20,6 @@
 
 </style>
 <h1>Found Rooms</h1>
-<ul class="list-group list-group-flush" id="notes">
 <div class="table">
     <div class="row">
           <div class="cell">
@@ -76,17 +75,5 @@
         </div>
         {% endfor %}
   </div>
-
-<h1>Found Rooms</h1>
-<ul class="list-group list-group-flush" id="notes">
-  {% for room in rooms %}
-  <li class="list-group-item">
-    {{ room.price }} {{ room.city }} {{ room.rating}} {{ room.number_of_beds }}
-    <button type="button" class="close">
-        <a href="{{ room.api_endpoint }}">Go to room</a>
-    </button>
-  </li>
-  {% endfor %}
-
 </ul>
 {% endblock %}
