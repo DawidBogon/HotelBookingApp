@@ -106,7 +106,4 @@ def createHotelTables(db):
         reservation_time = db.Column(db.DateTime(timezone=True), default=func.now())
         canceled = db.Column(db.Boolean)
 
-        version = db.Column(db.Integer, nullable=False)
-        __mapper_args__ = {"version_id_col": version}
-
     return Room, Transaction, RoomImage, Reservation

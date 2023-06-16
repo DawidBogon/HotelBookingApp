@@ -1,14 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import psycopg2.errors
+
 from . import WebsiteHotel
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, make_response, jsonify
 from datetime import datetime
 from sqlalchemy.orm.exc import StaleDataError
 import requests
+import time
+global lock_reservation
+lock_reservation = False
+
 hotel = Blueprint('hotel', __name__)
 
 website = WebsiteHotel()
-
 
 @website.login_manager.user_loader
 def load_user(user_id):
@@ -22,6 +27,12 @@ def reservation(room_id):
     #     flash('You need to login first.', category='success')
     #     session['prev_url'] = url_for('/', room_id=room_id)
     #     return redirect(url_for('auth.login'))
+
+    global lock_reservation
+    while lock_reservation:
+        time.sleep(0.1)
+    # if not lock_reservation:
+    lock_reservation = True
     room_reservations = website.Reservation.query.filter(website.Reservation.room == room_id).all()
     if request.method == 'POST':
         reservation_start = request.form.get('reservation_start')
@@ -38,11 +49,15 @@ def reservation(room_id):
                                 reservation.reservation_start > res_end and reservation.reservation_start > res_end))
             if not_reserved_flag:
                 create_transaction(room_id, reservation_start, reservation_end)
+                lock_reservation = False
             else:
                 flash('This date is unavailable', category='error')
-
+                lock_reservation = False
         else:
             flash('Incorrect date range', category='error')
+            lock_reservation = False
+
+    room_reservations = website.Reservation.query.filter(website.Reservation.room == room_id).all()
     room = website.Room.query.get_or_404(room_id)
     return render_template('hotel.html', room=room, room_reservations=room_reservations)
 
@@ -61,15 +76,13 @@ def get_all_rooms():
 
 def create_transaction(room_id, reservation_start, reservation_end):
     user_id = session.get('user_id')
-    try:
-        new_reservation = website.Reservation(user=user_id,
-                                              room=room_id,
-                                              reservation_start=reservation_start,
-                                              reservation_end=reservation_end,
-                                              canceled=False)
-        website.db.session.add(new_reservation)
-        website.db.session.commit()
-        flash('Reservation done succesfully!', category='success')
-    except StaleDataError:
-        flash('Reservation failed', category='fail')
+    new_reservation = website.Reservation(user=user_id,
+                                          room=room_id,
+                                          reservation_start=reservation_start,
+                                          reservation_end=reservation_end,
+                                          canceled=False)
+    website.db.session.add(new_reservation)
+    time.sleep(5)
+    website.db.session.commit()
+    flash('Reservation done succesfully!', category='success')
 
