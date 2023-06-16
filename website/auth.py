@@ -1,25 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from werkzeug.security import generate_password_hash, check_password_hash
 from . import WebsiteUser
-from flask_login import login_user, login_required, logout_user, current_user, login_manager
 from .utils import validate_email
 import requests
 
 auth = Blueprint('auth', __name__)
 
 website = WebsiteUser()
-
-
-# @website.login_manager.user_loader
-# def load_user(user_id):
-#     payload = dict(id=user_id)
-#     res = requests.post('http://localhost:5001/load_user', json=payload)
-#     print(res.json()['user'])
-#     if res.status_code == 200:
-#         return res.json()['user']
-#     else:
-#         return None
-    # return website.User.query.get(int(user_id))
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -34,6 +20,14 @@ def login():
             if res_json['result']:
                 flash('Logged in successfully!', category='success')
                 session['user_id'] = res_json['id']
+                if 'first_name' in res_json:
+                    session['first_name'] = res_json['first_name']
+                else:
+                    session['first_name'] = None
+                if 'last_name' in res_json:
+                    session['last_name'] = res_json['last_name']
+                else:
+                    session['last_name'] = None
                 session['logged_in'] = True
                 if session.get('prev_url'):
                     prev_url = session.get('prev_url')

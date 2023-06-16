@@ -24,7 +24,7 @@ def login():
     if user:
         if check_password_hash(user.password, password):
             if login_user(user, remember=True):
-                response = make_response(jsonify(result=True, id=user.id))
+                response = make_response(jsonify(result=True, id=user.id, first_name=user.first_name, last_name=user.last_name))
             else:
                 response = make_response(jsonify(result=False, id=None))
         else:
@@ -89,13 +89,15 @@ def return_rooms():
         number_of_beds = input_json['no_of_beds']
         # additionals = input_json['additionals']
         price = input_json['price']
-        rating = input_json['min_rating']
+        rating_min = input_json['min_rating']
+        rating_max = input_json['max_rating']
         city = input_json['city']
         rooms = website.Room.query.filter(and_(website.Room.city == city,
-                                               website.Room.rating >= rating,
+                                               website.Room.rating >= rating_min,
+                                               website.Room.rating <= rating_max,
                                                website.Room.price <= price,
                                                # website.Room.additionals.in_(additionals),
-                                               website.Room.number_of_beds >= number_of_beds,)).all()
+                                               website.Room.number_of_beds >= number_of_beds)).all()
                                                # website.Room.size >= size))
         res_table = []
         for room in rooms:

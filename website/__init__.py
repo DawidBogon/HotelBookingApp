@@ -6,11 +6,13 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 from ..database import *
 from flask_session import Session
 
 load_dotenv()
-
 
 class SingletonMeta(type):
     """
@@ -80,7 +82,8 @@ class WebsiteHotel(metaclass=SingletonMeta):
         self.app.config[
             'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}'
         self.db = SQLAlchemy(self.app)
-
+        engine = engine = create_engine(f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}')
+        self.Session = sessionmaker(bind=engine)
         # register all models here
         self.Room, self.Transaction, self.RoomImage, self.Reservation = createHotelTables(self.db)
         self.login_manager = LoginManager()
