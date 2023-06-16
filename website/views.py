@@ -50,7 +50,7 @@ def search_room():
                 flash('Found Rooms', category='info')
                 return render_template("rooms_list.html", user=session.get('logged_in'),
                                        rooms=rooms['res'], last_name=session.get('last_name'),
-                                       first_name=session.get('first_name'), user_id=session.get('user_id'))
+                                       first_name=session.get('first_name'), user_id=str(session.get('user_id')))
             else:
                 flash('There are no rooms', category='error')
             return render_template("search.html", user=session.get('logged_in'))
