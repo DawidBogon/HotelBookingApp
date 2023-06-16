@@ -74,6 +74,6 @@ def create_transaction(room_id, reservation_start, reservation_end, user_id, fir
                                           reservation_end=reservation_end,
                                           canceled=False)
     session.add(new_reservation)
-    time.sleep(5)
-    flash('Reservation done succesfully!', category='success')
+    # time.sleep(5)
+    flash('Reservation done successfully!', category='success')
 
