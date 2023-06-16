@@ -10,11 +10,9 @@ import time
 import schedule
 
 if __name__ == '__main__':
-    db_name = os.environ["DB_NAME_HOTEL"]
-    website_hotel = WebsiteHotel(db_name=db_name)
+    website_hotel = WebsiteHotel()
     website = WebsiteUser()
     website_access_point = WebsiteAccessPoint()
-    website_hotel = WebsiteHotel()
 
     website.app.register_blueprint(views, url_prefix='/')
     website.app.register_blueprint(auth, url_prefix='/')
