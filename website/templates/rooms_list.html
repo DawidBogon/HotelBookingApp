@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="cell2">
-                <input class="button" type="button" onclick="location.href='{{ room.api_endpoint }}';" value="Go to hotel" />
+                <input class="button" type="button" onclick="location.href='{{ room.api_endpoint +'?first_name=' + first_name + '&last_name=' + last_name + '&user_id=' + user_id }}';" value="Go to hotel" />
             </div>
         </div>
         {% endfor %}

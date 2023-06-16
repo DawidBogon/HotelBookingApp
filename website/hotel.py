@@ -20,7 +20,7 @@ def load_user(user_id):
     return website.User.query.get(int(user_id))
 
 
-@hotel.route('/<int:room_id>/', methods=['GET', 'POST'])
+@hotel.route('/<int:room_id>', methods=['GET', 'POST'])
 def reservation(room_id):
     # TODO - add verification if user is logged in
     # if not session.get('logged_in'):
