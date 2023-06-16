@@ -1,17 +1,18 @@
-from .website import WebsiteUser, WebsiteAccessPoint, WebsiteHotel
 from .website.views import views
 from .website.auth import auth
 from .website.hotel import hotel
+from .website import WebsiteUser, WebsiteAccessPoint, WebsiteHotel
+from .website.access_point import access_point
+from .sentinel import access_point_update_service
 import os
 import threading
-from .website.access_point import access_point
-import pandas as pd
-
+import time
+import schedule
 
 if __name__ == '__main__':
+    website_hotel = WebsiteHotel()
     website = WebsiteUser()
     website_access_point = WebsiteAccessPoint()
-    website_hotel = WebsiteHotel()
 
     website.app.register_blueprint(views, url_prefix='/')
     website.app.register_blueprint(auth, url_prefix='/')
@@ -31,6 +32,8 @@ if __name__ == '__main__':
                               port=int(os.environ["APP_PORT"])+2, use_reloader=False)
 
 
+    schedule.every(10).minutes.do(access_point_update_service)
+  
     t1 = threading.Thread(target=flask1, daemon=True)
 
     t2 = threading.Thread(target=flask2, daemon=True)
@@ -42,5 +45,6 @@ if __name__ == '__main__':
     t3.start()
 
     while True:
-        pass
+        schedule.run_pending()
+        time.sleep(1)
 

@@ -7,3 +7,4 @@ flask-login~=0.6.2
 Werkzeug~=2.3.4
 requests~=2.31.0
 flask_session~=0.5.0
+schedule~=1.2.0
