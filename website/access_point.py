@@ -1,9 +1,8 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import WebsiteAccessPoint
-from flask_login import login_user, login_required, logout_user, current_user, login_manager
-from .utils import validate_email
-from sqlalchemy import or_, and_
+from flask_login import login_user, logout_user
+from sqlalchemy import and_
 
 access_point = Blueprint('access_point', __name__)
 
@@ -85,12 +84,10 @@ def load_user():
 def return_rooms():
     if request.method == 'POST':
         input_json = request.get_json(force=True)
-        # size = input_json['size']
-        number_of_beds = input_json['no_of_beds']
-        # additionals = input_json['additionals']
-        price = input_json['price']
-        rating_min = input_json['min_rating']
-        rating_max = input_json['max_rating']
+        number_of_beds = input_json['no_of_beds'] if input_json['no_of_beds'] else 0
+        price = input_json['price'] if input_json['price'] else 9999999
+        rating_min = input_json['min_rating'] if input_json['min_rating'] else 0
+        rating_max = input_json['max_rating'] if input_json['max_rating'] else 10
         city = input_json['city']
         rooms = website.Room.query.filter(and_(website.Room.city == city,
                                                website.Room.rating >= rating_min,
@@ -98,7 +95,6 @@ def return_rooms():
                                                website.Room.price <= price,
                                                # website.Room.additionals.in_(additionals),
                                                website.Room.number_of_beds >= number_of_beds)).all()
-                                               # website.Room.size >= size))
         res_table = []
         for room in rooms:
             res_table.append(room.return_table())
