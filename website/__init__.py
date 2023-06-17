@@ -14,6 +14,7 @@ from flask_session import Session
 
 load_dotenv()
 
+
 class SingletonMeta(type):
     """
     The Singleton class can be implemented in different ways in Python. Some
@@ -46,7 +47,7 @@ class WebsiteUser(metaclass=SingletonMeta):
         self.db = SQLAlchemy(self.app)
 
         # register all models here
-        self.TestTable, self.User = createUserTables(self.db)
+        self.TestTable = createUserTables(self.db)
         # self.login_manager = LoginManager()
         # self.login_manager.login_view = 'auth.login'
         # self.login_manager.init_app(self.app)
@@ -82,10 +83,10 @@ class WebsiteHotel(metaclass=SingletonMeta):
         self.app.config[
             'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}'
         self.db = SQLAlchemy(self.app)
-        engine = engine = create_engine(f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}')
+        engine = create_engine(f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}')
         self.Session = sessionmaker(bind=engine)
         # register all models here
-        self.Room, self.Transaction, self.RoomImage, self.Reservation = createHotelTables(self.db)
+        self.Room, self.Reservation = createHotelTables(self.db)
         self.login_manager = LoginManager()
         self.login_manager.login_view = 'auth.login'
         self.login_manager.init_app(self.app)

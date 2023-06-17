@@ -43,7 +43,7 @@ if __name__ == '__main__':
     t1.start()
     t2.start()
     t3.start()
-
+    access_point_update_service()
     while True:
         schedule.run_pending()
         time.sleep(1)
