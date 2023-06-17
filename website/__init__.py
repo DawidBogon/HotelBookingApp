@@ -14,6 +14,7 @@ from flask_session import Session
 
 load_dotenv()
 
+
 class SingletonMeta(type):
     """
     The Singleton class can be implemented in different ways in Python. Some
