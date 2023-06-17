@@ -82,7 +82,7 @@ class WebsiteHotel(metaclass=SingletonMeta):
         self.app.config[
             'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}'
         self.db = SQLAlchemy(self.app)
-        engine = engine = create_engine(f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}')
+        engine = create_engine(f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME_HOTEL"]}')
         self.Session = sessionmaker(bind=engine)
         # register all models here
         self.Room, self.Reservation = createHotelTables(self.db)
