@@ -76,24 +76,6 @@ def createHotelTables(db):
             return dict(id=self.id, size=self.size, number_of_beds=self.number_of_beds, additionals=self.additionals,
                         price=self.price)
 
-    # Transaction not used
-    class Transaction(db.Model):
-        __tablename__ = "transactions"
-        id = db.Column(db.Integer, primary_key=True)
-        user = db.Column(db.Integer)
-        room = db.Column(db.Integer, db.ForeignKey("rooms.id"))
-        expire_time = db.Column(db.DateTime)
-        completed = db.Column(db.Boolean)
-        is_logged_in = db.Column(db.Boolean)
-
-    # RoomImage not used
-    class RoomImage(db.Model):
-        __tablename__ = "room_images"
-        id = db.Column(db.Integer, primary_key=True)
-        room = db.Column(db.Integer, db.ForeignKey("rooms.id"))
-        image = db.Column(db.Text)
-        mimetype = db.Column(db.String(255))
-
     class Reservation(db.Model):
         __tablename__ = "reservations"
         id = db.Column(db.Integer, primary_key=True)
@@ -106,4 +88,4 @@ def createHotelTables(db):
         reservation_time = db.Column(db.DateTime(timezone=True), default=func.now())
         canceled = db.Column(db.Boolean)
 
-    return Room, Transaction, RoomImage, Reservation
+    return Room, Reservation
