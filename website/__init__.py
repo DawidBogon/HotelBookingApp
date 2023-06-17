@@ -46,7 +46,7 @@ class WebsiteUser(metaclass=SingletonMeta):
         self.db = SQLAlchemy(self.app)
 
         # register all models here
-        self.TestTable, self.User = createUserTables(self.db)
+        self.TestTable = createUserTables(self.db)
         # self.login_manager = LoginManager()
         # self.login_manager.login_view = 'auth.login'
         # self.login_manager.init_app(self.app)

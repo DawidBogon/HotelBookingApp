@@ -50,7 +50,7 @@ def access_point_update_service():
             session.execute(delete_stmt)
             for room in res_json['res']:
                 room_id = room['id']
-                hotel_dict['api_endpoint'] = endpoint + '/' + str(room_id) + '/'
+                hotel_dict['api_endpoint'] = endpoint + '/' + str(room_id)
                 hotel_dict.update(room)
                 del hotel_dict['id']
                 room = Room(**hotel_dict)

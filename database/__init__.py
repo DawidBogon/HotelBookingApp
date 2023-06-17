@@ -12,17 +12,7 @@ def createUserTables(db):
         data = db.Column(db.String(10000))
         date = db.Column(db.DateTime(timezone=True), default=func.now())
 
-    class User(db.Model, UserMixin):
-        __tablename__ = "users"
-        id = db.Column(db.Integer, primary_key=True)
-        email = db.Column(db.String(255), unique=True)
-        login = db.Column(db.String(255), unique=True)
-        password = db.Column(db.String(255))
-        first_name = db.Column(db.String(255))
-        last_name = db.Column(db.String(255))
-        role = db.Column(db.Integer)
-
-    return TestTable, User
+    return TestTable
 
 
 def createAccessPointTables(db):

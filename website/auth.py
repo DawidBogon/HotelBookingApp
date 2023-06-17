@@ -70,11 +70,7 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        user_by_email = website.User.query.filter_by(email=email).first()
-        user_by_login = website.User.query.filter_by(login=login).first()
-        if user_by_email or user_by_login:
-            flash('User already exists.', category='error')
-        elif not validate_email(email):
+        if not validate_email(email):
             flash('Invalid email', category='error')
         elif len(first_name) < 2:
             flash('First name must be greater than 1 character.', category='error')

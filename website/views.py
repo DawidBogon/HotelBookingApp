@@ -34,6 +34,10 @@ def home():
 
 @views.route('/search-room', methods=['GET', 'POST'])
 def search_room():
+    if not session.get('logged_in'):
+        flash('You need to login first.', category='success')
+        session['prev_url'] = url_for('views.search_room')
+        return redirect(url_for('auth.login'))
     if request.method == 'POST':
         city = request.form.get('city', None)
         hotel_name = request.form.get('price', None)
@@ -61,6 +65,10 @@ def search_room():
 
 @views.route('/delete-entry', methods=['POST'])
 def delete_entry():
+    if not session.get('logged_in'):
+        flash('You need to login first.', category='success')
+        session['prev_url'] = url_for('views.home')
+        return redirect(url_for('auth.login'))
     entry = json.loads(request.data)
     entryId = entry['entryId']
     entry = website.TestTable.query.get(entryId)
