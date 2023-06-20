@@ -6,7 +6,7 @@ from . import WebsiteHotel
 from flask import Blueprint, render_template, request, flash, make_response, jsonify
 from datetime import datetime
 import time
-
+from sqlalchemy.sql import text
 hotel = Blueprint('hotel', __name__)
 
 website = WebsiteHotel()
@@ -26,7 +26,7 @@ def reservation(room_id):
     if request.method == 'POST':
         session = website.Session()
         try:
-            session.execute('LOCK TABLE rooms IN EXCLUSIVE MODE;')
+            session.execute(text('LOCK TABLE rooms IN EXCLUSIVE MODE;'))
             room_reservations = session.query(website.Reservation).filter(website.Reservation.room == room_id).all()
             reservation_start = request.form.get('reservation_start')
             reservation_end = request.form.get('reservation_end')
