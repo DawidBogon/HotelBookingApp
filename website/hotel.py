@@ -12,11 +12,6 @@ hotel = Blueprint('hotel', __name__)
 website = WebsiteHotel()
 
 
-@website.login_manager.user_loader
-def load_user(user_id):
-    return website.User.query.get(int(user_id))
-
-
 @hotel.route('/<int:room_id>', methods=['GET', 'POST'])
 def reservation(room_id):
     first_name = request.args.get('first_name')

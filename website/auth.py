@@ -23,11 +23,11 @@ def login():
                 if 'first_name' in res_json:
                     session['first_name'] = res_json['first_name']
                 else:
-                    session['first_name'] = None
+                    session['first_name'] = ''
                 if 'last_name' in res_json:
                     session['last_name'] = res_json['last_name']
                 else:
-                    session['last_name'] = None
+                    session['last_name'] = ''
                 session['logged_in'] = True
                 if session.get('prev_url'):
                     prev_url = session.get('prev_url')
@@ -51,8 +51,8 @@ def logout():
         res_json = res.json()
         if res_json['result']:
             flash('Logged out successfully', category='success')
-            session['user_id'] = None
-            session['logged_in'] = None
+            session['user_id'] = ''
+            session['logged_in'] = False
         else:
             flash('Failed to logout', category='error')
     else:
@@ -89,6 +89,14 @@ def sign_up():
                     flash('Account created!', category='success')
                     session['user_id'] = res_json['user_id']
                     session['logged_in'] = True
+                    if 'first_name' in res_json:
+                        session['first_name'] = res_json['first_name']
+                    else:
+                        session['first_name'] = ''
+                    if 'last_name' in res_json:
+                        session['last_name'] = res_json['last_name']
+                    else:
+                        session['last_name'] = ''
                     return redirect(url_for('views.home'))
                 else:
                     flash('Failed to create user.', category='error')

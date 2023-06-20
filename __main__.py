@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
 
     schedule.every(10).minutes.do(access_point_update_service)
-  
+
     t1 = threading.Thread(target=flask1, daemon=True)
 
     t2 = threading.Thread(target=flask2, daemon=True)

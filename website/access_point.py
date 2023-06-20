@@ -65,7 +65,7 @@ def sign_up():
             website.db.session.add(new_user)
             website.db.session.commit()
             login_user(new_user, remember=True)
-            response = make_response(jsonify(result=True, user_id=new_user.get_id()))
+            response = make_response(jsonify(result=True, user_id=new_user.get_id(), first_name=new_user.first_name, last_name=new_user.last_name))
         response.headers["Content-Type"] = "application/json"
         return response
 

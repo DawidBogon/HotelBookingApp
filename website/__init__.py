@@ -77,7 +77,7 @@ class WebsiteAccessPoint(metaclass=SingletonMeta):
             self.set_initial_values()
             print('Database schema has been synchronized')
     def set_initial_values(self):
-        hotels = [(0, 4.0, "http://127.0.0.1:5002", "Kraków", "Lipowa 1", "BestHotel")]
+        hotels = [(0, 4.0, "http://localhost:5002", "Kraków", "Lipowa 1", "BestHotel")]
         try:
             for id, rating, api_endpoint, city, address, hotel_name in hotels:
                 new_hotel = self.HotelData(id=id, rating=rating, api_endpoint=api_endpoint, city=city,
