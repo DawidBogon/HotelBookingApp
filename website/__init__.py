@@ -72,9 +72,20 @@ class WebsiteAccessPoint(metaclass=SingletonMeta):
         self.login_manager.init_app(self.app)
 
         with self.app.app_context():
+            self.db.drop_all()
             self.db.create_all()
+            self.set_initial_values()
             print('Database schema has been synchronized')
-
+    def set_initial_values(self):
+        hotels = [(0, 4.0, "http://127.0.0.1:5002", "Kraków", "Lipowa 1", "BestHotel")]
+        try:
+            for id, rating, api_endpoint, city, address, hotel_name in hotels:
+                new_hotel = self.HotelData(id=id, rating=rating, api_endpoint=api_endpoint, city=city,
+                                     address=address, hotel_name=hotel_name)
+                self.db.session.add(new_hotel)
+            self.db.session.commit()
+        except:
+            pass
 
 class WebsiteHotel(metaclass=SingletonMeta):
     def __init__(self):
